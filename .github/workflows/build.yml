@@ -1,0 +1,39 @@
+name: Build Typst documents
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Compile Typst documents
+        uses: lvignoli/typst-action@main
+        with:
+          source_file: |
+            fr.typ
+            en.typ
+
+      - name: Upload PDFs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFs
+          path: "*.pdf"
+
+      - name: Get current date
+        id: date
+        run: echo "DATE=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.sha }}
+          name: "Build ${{ env.DATE }}"
+          files: "*.pdf"
