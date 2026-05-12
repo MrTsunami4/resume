@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.2
 
       - name: Compile Typst documents
         uses: lvignoli/typst-action@main
@@ -22,7 +22,7 @@ jobs:
             en.typ
 
       - name: Upload PDFs as artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: PDFs
           path: "*.pdf"
@@ -32,7 +32,7 @@ jobs:
         run: echo "DATE=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3.0.0
         with:
           tag_name: build-${{ github.sha }}
           name: "Build ${{ env.DATE }}"
